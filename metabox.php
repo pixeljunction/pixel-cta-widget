@@ -31,12 +31,6 @@ function pxlcta_metabox( $meta_boxes ) {
 				'save_id' => true, // save ID using true
 				'allow' => array( 'url', 'attachment' ) // limit to just attachments with array( 'attachment' )
 			),
-			array(
-				'name' => 'Call to Action Title',
-				'desc' => 'Add a title to display alongside the Call to Action image. The title is used as a fallack if nothing is added here. This is useful if the page title is long, as a shortened version can be added here.',
-				'id' => 'pxlcta_title',
-				'type' => 'text'
-			),
 		),
 	);
 
