@@ -117,7 +117,7 @@ class PXLCTA_Widget extends WP_Widget {
 		echo $before_widget;
 
 		$pxlcta_query_args = array(
-			//'post_type' => apply_filters( 'pxlcta_post_types', array( 'page' ) ),
+			'post_type' => apply_filters( 'pxlcta_post_types', array( 'page' ) ),
 			'post__in' => array( $instance[ 'postid' ] ),
 			'posts_per_page' => '1'
 		);
@@ -151,23 +151,42 @@ class PXLCTA_Widget extends WP_Widget {
 	    			
 	    			/* add action for hooking in output before the featured image */
 	    			do_action( 'pxlcta_before_featured_image', get_the_ID() );
-	    		
-	    		?>
-	    		
-	    		<div class="featured-image">
-	    				    			
-	    			<a href="<?php the_permalink(); ?>"><?php the_post_thumbnail( apply_filters( 'pxlcta_image_size', 'pxlcta' ) ); ?></a>
-	    		
-	    		</div>
-	    		
-	    		<?php
-	    			
-	    			/* add action for hooking in output after the featured image */
-	    			do_action( 'pxlcta_after_featured_image', get_the_ID() );
-	    		
-	    		?>
-	    	
-	    	</div>
+    			
+    				/* get the id of the cta image from post meta */
+    				$cta_image_id = get_post_meta( get_the_ID(), 'pxlcta_image_id', true );
+    				
+    				/* check we have an id */
+    				if( $cta_image_id > 0 ) {
+    				
+    					?>
+    					
+    					<div class="featured-image">
+    					
+    						<?php
+    							
+    							/* get the attachment image based on size provided in the filter */
+    							$pxlcta_image = wp_get_attachment_image_src( $cta_image_id, apply_filters( 'pxlcta_cta_image_size', 'pxlcta' ) );
+    						
+    						?>
+    					
+    						<a href="<?php the_permalink(); ?>"><img src="<?php echo esc_url( $pxlcta_image[0] ); ?>" alt="CTA Image" class="cta-img" /></a>
+    					
+    					</div>
+    					
+    					<?php
+	    				
+    				} // end if have id
+    			
+    			?>
+    		
+    		</div>
+    		
+    		<?php
+    			
+    			/* add action for hooking in output after the featured image */
+    			do_action( 'pxlcta_after_featured_image', get_the_ID() );
+    		
+    		?>
 	    
 		<?php /* end the loop */
 		endwhile;
