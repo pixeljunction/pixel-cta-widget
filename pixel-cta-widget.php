@@ -127,7 +127,7 @@ class PXLCTA_Widget extends WP_Widget {
 
 	    /* begin the query loop */
 	    while( $pxlcta_query->have_posts() ) : $pxlcta_query->the_post(); ?>
-	    
+	    	
 	    	<div id="post-<?php the_ID(); ?>" <?php post_class( 'pxlcta-content' ); ?>>
 	    	
 	    		<?php
@@ -166,10 +166,24 @@ class PXLCTA_Widget extends WP_Widget {
     							
     							/* get the attachment image based on size provided in the filter */
     							$pxlcta_image = wp_get_attachment_image_src( $cta_image_id, apply_filters( 'pxlcta_cta_image_size', 'pxlcta' ) );
+    							
+    							/* check whether we have a link url */
+    							if( ! empty( $instance[ 'link_url' ] ) ) {
+	    							
+	    							/* set the link url to a variable to use later */
+	    							$pxlcta_link_url = $instance[ 'link_url' ];
+	    						
+	    						/* no link url is provided */	
+    							} else {
+	    							
+	    							/* set the link url to the contents permalink */
+	    							$pxlcta_link_url = get_permalink();
+	    							
+    							} // end if link url
     						
     						?>
     					
-    						<a href="<?php the_permalink(); ?>"><img src="<?php echo esc_url( $pxlcta_image[0] ); ?>" alt="CTA Image" class="cta-img" /></a>
+    						<a href="<?php echo esc_url( $pxlcta_link_url ); ?>"><img src="<?php echo esc_url( $pxlcta_image[0] ); ?>" alt="CTA Image" class="cta-img" /></a>
     					
     					</div>
     					
@@ -205,6 +219,7 @@ class PXLCTA_Widget extends WP_Widget {
         $instance = $old_instance;
         $instance[ 'title' ] = strip_tags( $new_instance[ 'title' ] );
         $instance[ 'postid' ] = (int) $new_instance[ 'postid' ];
+        $instance[ 'link_url' ] = $new_instance[ 'link_url' ];
         return $instance;
         
     }
@@ -223,6 +238,12 @@ class PXLCTA_Widget extends WP_Widget {
        	} else {
 	       	$postid = '';
        	}
+       	
+       	if( isset( $instance[ 'link_url' ] ) ) {
+       		$link_url = esc_attr( $instance[ 'link_url' ] );
+       	} else {
+	       	$link_url = '';
+       	}
 
     	?>
     	
@@ -238,6 +259,14 @@ class PXLCTA_Widget extends WP_Widget {
         	<label for="<?php echo $this->get_field_id( 'postid' ); ?>">
 	        	<?php _e( 'Choose Content:' ); ?><br />
 	        	<?php pxlcta_featured_image_posts_select( $this->get_field_name( 'postid' ), apply_filters( 'pxlcta_post_types', array( 'page' ) ), $postid ); ?>
+	        </label>
+		</p>
+		
+		<p>
+        	<label for="<?php echo $this->get_field_id( 'link_url' ); ?>">
+	        	<?php _e( 'Link URL:' ); ?><br />
+	        	<input class="widefat" id="<?php echo $this->get_field_id( 'link_url' ); ?>" name="<?php echo $this->get_field_name( 'link_url' ); ?>" type="text" value="<?php echo $link_url; ?>" />
+	        	<p class="description">Add a URL to link this Call To Action to. Leave blank to link to the content permalink.</p>
 	        </label>
 		</p>
         
