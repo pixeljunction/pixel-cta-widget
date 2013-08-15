@@ -104,7 +104,7 @@ class PXLCTA_Widget extends WP_Widget {
 		$widget_ops = array( 'classname' => 'pxlcta_widget', 'description' => 'Widget to display Call To Action information based on the post meta of pages.' );
 		
 		/* initialise the widget to the WP_Widget class */
-		$this->WP_Widget( 'pxlcta_widget', __( 'Pixel CTA Widget', 'pxlcta' ), $widget_ops );
+		$this->WP_Widget( 'pxlcta_widget', __( 'Pixel CTA Widget', 'pxlcta' ), pxlcta_get_post_types() );
 		
 	} // ends function
 	
@@ -117,7 +117,7 @@ class PXLCTA_Widget extends WP_Widget {
 		echo $before_widget;
 
 		$pxlcta_query_args = array(
-			'post_type' => apply_filters( 'pxlcta_post_types', array( 'page' ) ),
+			'post_type' => apply_filters( 'pxlcta_post_types', pxlcta_get_post_types() ),
 			'post__in' => array( $instance[ 'postid' ] ),
 			'posts_per_page' => '1'
 		);
@@ -136,18 +136,24 @@ class PXLCTA_Widget extends WP_Widget {
 	    			do_action( 'pxlcta_before_title', get_the_ID() );
 	    		
 	    			/* check whether there is a title added to the widget */
-	    			if( ! empty( $instance[ 'title' ] ) ) {
+	    			if( !empty( $instance[ 'title' ] ) ) {
 		    			
-		    			/* output the widget title */
-		    			echo $before_title; echo $instance[ 'title' ]; echo $after_title;
+		    			/* build widget title output */
+		    			$pxlcta_widget_title = $instance[ 'title' ];
 		    		
 		    		/* no widget title is entered */
 	    			} else {
 		    			
-		    			/* output the post title */
-		    			echo $before_title; the_title(); echo $after_title;
+		    			/* build widget title output */
+		    			$pxlcta_widget_title = get_the_title();
 		    			
 	    			} // end if widget has widget title
+	    			
+	    			/* build full title output */
+	    			$pxlcta_widget_title_output = $before_title . $pxlcta_widget_title . $after_title;
+	    			
+	    			/* output the title running through a filter to allow for changes */
+	    			echo apply_filters( 'pxlcta_title', $pxlcta_widget_title_output ); 
 	    			
 	    			/* add action for hooking in output before the featured image */
 	    			do_action( 'pxlcta_before_featured_image', get_the_ID() );
@@ -188,19 +194,15 @@ class PXLCTA_Widget extends WP_Widget {
     					</div>
     					
     					<?php
+    			
+			    			/* add action for hooking in output after the featured image */
+			    			do_action( 'pxlcta_after_featured_image', $pxlcta_link_url );
 	    				
     				} // end if have id
     			
     			?>
     		
     		</div>
-    		
-    		<?php
-    			
-    			/* add action for hooking in output after the featured image */
-    			do_action( 'pxlcta_after_featured_image', get_the_ID() );
-    		
-    		?>
 	    
 		<?php /* end the loop */
 		endwhile;
@@ -258,7 +260,7 @@ class PXLCTA_Widget extends WP_Widget {
         <p>
         	<label for="<?php echo $this->get_field_id( 'postid' ); ?>">
 	        	<?php _e( 'Choose Content:' ); ?><br />
-	        	<?php pxlcta_featured_image_posts_select( $this->get_field_name( 'postid' ), apply_filters( 'pxlcta_post_types', array( 'page' ) ), $postid ); ?>
+	        	<?php pxlcta_featured_image_posts_select( $this->get_field_name( 'postid' ), apply_filters( 'pxlcta_post_types', pxlcta_get_post_types() ), $postid ); ?>
 	        </label>
 		</p>
 		
