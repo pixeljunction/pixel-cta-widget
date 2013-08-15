@@ -136,7 +136,7 @@ class PXLCTA_Widget extends WP_Widget {
 	    			do_action( 'pxlcta_before_title', get_the_ID() );
 	    		
 	    			/* check whether there is a title added to the widget */
-	    			if( isset( $instance[ 'title' ] ) ) {
+	    			if( ! empty( $instance[ 'title' ] ) ) {
 		    			
 		    			/* output the widget title */
 		    			echo $before_title; echo $instance[ 'title' ]; echo $after_title;
