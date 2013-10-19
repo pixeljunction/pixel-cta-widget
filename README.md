@@ -1,8 +1,9 @@
-Pixel Call to Action Widget
-============================
+![pxlclick](http://content.pixeljunction.co.uk/assets/plugin-logos/pxl-click.jpg)
+
+# pxlclick
 
 * Contributors: [@wpmark](http://twitter.com/wpmark)
-* Plugin Name: pixel-cta-widget
+* Plugin Name: pxlclick
 * Plugin URI: [https://github.com/pixeljunction/pixel-cta-widget](https://github.com/pixeljunction/pixel-cta-widget)
 * Description: A Call to Action Widget that allows you to pull in WordPress content (e.g. posts, pages) and show as a call to action image with title and link to the content.
 * Author: [Mark Wilkinson](http://markwilkinson.me)
